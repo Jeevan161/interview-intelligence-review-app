@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
@@ -151,6 +152,12 @@ app.get("/api/remarks", async (req, res) => {
     .aggregate(pipeline)
     .toArray();
   res.json(remarks);
+});
+
+// Serve React client build
+app.use(express.static(path.join(__dirname, "../client/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
 const PORT = 4000;
