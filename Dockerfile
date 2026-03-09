@@ -19,5 +19,5 @@ FROM node:18 AS production
 WORKDIR /app
 COPY --from=client-build /app/client/build ./client/build
 COPY --from=server-build /app/server ./server
-EXPOSE 3000 5000
+EXPOSE 3000 4000
 CMD ["node", "server/index.js"]
