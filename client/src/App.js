@@ -23,7 +23,6 @@ function App() {
   const [emailInput, setEmailInput] = useState("");
   const [registeredEmails, setRegisteredEmails] = useState([]);
   const [loginError, setLoginError] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     fetch(`${API}/reviewers`)

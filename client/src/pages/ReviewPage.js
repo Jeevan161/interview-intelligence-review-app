@@ -54,7 +54,7 @@ const HOW_COLORS = {
 };
 
 function ReviewCard({ q: initialQ, email, onReviewed }) {
-  const [q, setQ] = useState(initialQ);
+  const [q] = useState(initialQ);
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(false);
   const a = q.gpt_analysis || {};
