@@ -11,10 +11,16 @@ const URI =
 const DB = "interview_intelligence";
 let db;
 
-MongoClient.connect(URI).then((client) => {
-  db = client.db(DB);
-  console.log("Connected to MongoDB");
-});
+MongoClient.connect(URI)
+  .then((client) => {
+    db = client.db(DB);
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+    process.exit(1);
+  });
 
 // GET all questions (with filters)
 app.get("/api/questions", async (req, res) => {
@@ -148,4 +154,3 @@ app.get("/api/remarks", async (req, res) => {
 });
 
 const PORT = 4000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -2,17 +2,17 @@
 # Build stage for client
 FROM node:18 AS client-build
 WORKDIR /app/client
-COPY review-app/client/package.json review-app/client/package-lock.json ./
+COPY client/package.json client/package-lock.json ./
 RUN npm install
-COPY review-app/client ./
+COPY client ./
 RUN npm run build
 
 # Build stage for server
 FROM node:18 AS server-build
 WORKDIR /app/server
-COPY review-app/server/package.json review-app/server/package-lock.json ./
+COPY server/package.json server/package-lock.json ./
 RUN npm install
-COPY review-app/server ./
+COPY server ./
 
 # Production image
 FROM node:18 AS production

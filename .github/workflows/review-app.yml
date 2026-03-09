@@ -20,22 +20,22 @@ jobs:
           node-version: '18'
 
       - name: Install client dependencies
-        working-directory: review-app/client
+        working-directory: client
         run: npm install
 
       - name: Build client
-        working-directory: review-app/client
+        working-directory: client
         run: npm run build
 
       - name: Install server dependencies
-        working-directory: review-app/server
+        working-directory: server
         run: npm install
 
       - name: Run server tests
-        working-directory: review-app/server
+        working-directory: server
         run: npm test || true
 
       - name: Build Docker image
-        run: docker build -t review-app:latest -f review-app/Dockerfile .
+        run: docker build -t review-app:latest .
 
       # Add deployment steps here if needed
