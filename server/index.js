@@ -97,7 +97,7 @@ app.get("/api/stats", async (req, res) => {
 
 // POST remark for a question
 app.post("/api/questions/:id/remarks", async (req, res) => {
-  const { name, remark } = req.body;
+  const { name, remark, action, session } = req.body;
   if (!name || !remark)
     return res.status(400).json({ error: "name and remark required" });
 
@@ -107,6 +107,8 @@ app.post("/api/questions/:id/remarks", async (req, res) => {
     remark,
     created_at: new Date(),
   };
+  if (action) doc.action = action;
+  if (session) doc.session = session;
   await db.collection("remarks").insertOne(doc);
 
   res.json({ success: true, remark: doc });
@@ -124,7 +126,14 @@ app.get("/api/questions/:id/remarks", async (req, res) => {
 
 // GET all remarks (for remarks page)
 app.get("/api/remarks", async (req, res) => {
+  const { name, action, session } = req.query;
+  const matchStage = {};
+  if (name) matchStage.name = name;
+  if (action) matchStage.action = action;
+  if (session) matchStage.session = session;
+
   const pipeline = [
+    ...(Object.keys(matchStage).length > 0 ? [{ $match: matchStage }] : []),
     { $sort: { created_at: -1 } },
     {
       $lookup: {
@@ -139,6 +148,8 @@ app.get("/api/remarks", async (req, res) => {
       $project: {
         name: 1,
         remark: 1,
+        action: 1,
+        session: 1,
         created_at: 1,
         "question.Question": 1,
         "question.Company Name": 1,

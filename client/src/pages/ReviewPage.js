@@ -53,6 +53,53 @@ const HOW_COLORS = {
   CONCEPT_COVERED: "how-concept",
 };
 
+const ACTION_OPTIONS = [
+  "Adding New Question",
+  "Adding New Topic",
+];
+
+const SESSION_OPTIONS = [
+  "How to Learn a New Programming Language in Record Time",
+  "Introduction to Python Programming",
+  "Coding Practice Walkthrough | Part 1",
+  "Variables and Data Types",
+  "Sequence of Instructions",
+  "Working with Strings & Input-Output Basics",
+  "How to Debug Your Code",
+  "Relational, Logical and Compound Operators",
+  "Conditional Statements",
+  "Loops",
+  "Nested Loops & Loop Control Statements",
+  "Comparing Strings and String Methods",
+  "String Formatting",
+  "Lists",
+  "Working with Lists & Nested Lists",
+  "Lists & Strings",
+  "Functions",
+  "Built-In Functions and List Methods",
+  "Function Call Stack and Recursion",
+  "Tuples and Sequences",
+  "Sets",
+  "Set Operations",
+  "Introduction to Matrices",
+  "Shorthand Expressions & List Comprehensions",
+  "Dictionaries",
+  "Working with Dictionaries",
+  "Introduction to Object-Oriented Programming",
+  "Object-Oriented Programming | Part 2",
+  "Classes & Objects",
+  "Attributes & Methods",
+  "Encapsulation",
+  "Inheritance",
+  "Inheritance | Part 2",
+  "Abstraction",
+  "Polymorphism",
+  "Python Standard Library",
+  "Scope & Namespaces",
+  "Errors & Exceptions",
+  "Working with Date and Time",
+];
+
 function ReviewCard({ q: initialQ, email, onReviewed }) {
   const [q] = useState(initialQ);
   const [saving, setSaving] = useState(false);
@@ -63,6 +110,8 @@ function ReviewCard({ q: initialQ, email, onReviewed }) {
   const [howCovered, setHowCovered] = useState(a.how_covered || "");
   const [coverageStatus, setCoverageStatus] = useState(a.coverage_status || "");
   const [remarkText, setRemarkText] = useState("");
+  const [remarkAction, setRemarkAction] = useState("");
+  const [remarkSession, setRemarkSession] = useState("");
 
   const covClass =
     a.is_covered === "COVERED" ? "covered" :
@@ -87,10 +136,13 @@ function ReviewCard({ q: initialQ, email, onReviewed }) {
 
     // Add remark if provided
     if (remarkText.trim()) {
+      const remarkData = { name: email, remark: remarkText.trim() };
+      if (remarkAction) remarkData.action = remarkAction;
+      if (remarkSession) remarkData.session = remarkSession;
       await fetch(`${API}/questions/${q._id}/remarks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: email, remark: remarkText.trim() }),
+        body: JSON.stringify(remarkData),
       });
     }
 
@@ -210,6 +262,26 @@ function ReviewCard({ q: initialQ, email, onReviewed }) {
 
         {/* Remark */}
         <div className="review-remark-section">
+          <div className="remark-dropdowns-row">
+            <div className="remark-dropdown-group">
+              <label>Action to be taken</label>
+              <select value={remarkAction} onChange={(e) => setRemarkAction(e.target.value)}>
+                <option value="">Select action...</option>
+                {ACTION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+            <div className="remark-dropdown-group">
+              <label>Related Session</label>
+              <select value={remarkSession} onChange={(e) => setRemarkSession(e.target.value)}>
+                <option value="">Select session...</option>
+                {SESSION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          </div>
           <input
             value={remarkText}
             onChange={(e) => setRemarkText(e.target.value)}
